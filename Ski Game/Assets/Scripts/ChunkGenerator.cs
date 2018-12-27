@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ChunkGenerator : MonoBehaviour {
 
+    public Transform chunkRoot;
     public Transform playerTransform;
     public ChunkMesh chunkPrefab;
 
@@ -26,7 +27,6 @@ public class ChunkGenerator : MonoBehaviour {
     void UpdateChunks() {
         //Player's position in chunk space
         int playerX = Mathf.FloorToInt(playerTransform.position.x / ChunkSize);
-        //print("PlayerX: " + playerX);
 
         while (playerX + ChunkViewDistance > CurrentChunkX) {
             CurrentChunkX++;
@@ -49,6 +49,7 @@ public class ChunkGenerator : MonoBehaviour {
     ChunkMesh CreateChunkAt(int x) {
         ChunkMesh c = Instantiate(chunkPrefab);
         c.transform.position = new Vector3(x * ChunkSize, lastChunkHeight);
+        c.transform.parent = chunkRoot;
 
         float[] heights = GetHeights();
         c.Init(x, heights);

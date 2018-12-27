@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ObstacleSpawner : MonoBehaviour
 {
+    public Transform obstacleRoot;
     public Transform playerTransform;
 
     public GameObject obstaclePrefab;
@@ -19,6 +20,9 @@ public class ObstacleSpawner : MonoBehaviour
 
     List<Transform> obstacles = new List<Transform>();
 
+    //Public fields used by scripts
+    public float SpeedScale = 1f;
+
     void Start()
     {
         currentX = playerTransform.position.x;
@@ -29,9 +33,9 @@ public class ObstacleSpawner : MonoBehaviour
 
     void Update()
     {
-        if (playerTransform.position.x + spawnDistance > currentX + spacing)
+        if (playerTransform.position.x + spawnDistance > currentX + spacing * SpeedScale)
         {
-            currentX += spacing;
+            currentX += spacing * SpeedScale;
             SpawnObstacle(currentX);
             spacing = Random.Range(minSpawnSpacing, maxSpawnSpacing);
         }
@@ -40,7 +44,7 @@ public class ObstacleSpawner : MonoBehaviour
         List<int> toRemove = new List<int>();
         for (int i = 0; i < obstacles.Count; i++)
         {
-            if (obstacles[i].position.x < currentX - maxSpawnSpacing)
+            if (obstacles[i].position.x < playerTransform.position.x - spawnDistance)
                 toRemove.Add(i);
         }
 
@@ -70,6 +74,7 @@ public class ObstacleSpawner : MonoBehaviour
         Vector3 pos = hit.point;
 
         GameObject gm = Instantiate(obstaclePrefab, pos, rot);
+        gm.transform.parent = obstacleRoot;
         obstacles.Add(gm.transform);
     }
 }

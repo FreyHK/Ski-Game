@@ -15,21 +15,34 @@ public class PlayerController : MonoBehaviour {
     float groundCheckDistance = .7f;
 
     //Effects
-    public ParticleSystem trailParticles;
-    public TrailRenderer trackTrailR;
-    public TrailRenderer trackTrailL;
-    
+    [SerializeField] ParticleSystem trailParticles;
+    [SerializeField] TrailRenderer trackTrailR;
+    [SerializeField] TrailRenderer trackTrailL;
+
+    //Public fields used by scripts
+    public float SpeedScale = 1f;
+
     void Start () {
         body = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         trailParticles.Stop();
         trackTrailR.emitting = false;
         trackTrailL.emitting = false;
+
+        //Place ourselves on ground
+        RaycastHit2D hit = Physics2D.Raycast(body.position, -Vector2.up, 999f, groundMask);
+
+        if (hit.collider != null) {
+            transform.position = hit.point + Vector2.up * .6f;
+        }
+        //Enable trails (should be disabled in scene, avoids visual glitch)
+        trackTrailR.enabled = true;
+        trackTrailL.enabled = true;
     }
 
     float speed = 6f;
-    float jumpForce = 12f;
-    
+    float jumpForce = 14f;
+
     void Update () {
         DoGroundCheck();
         if (anim != null)
@@ -37,20 +50,19 @@ public class PlayerController : MonoBehaviour {
 
         //Clamp movement
         if (isGrounded && !isJumping) {
-            body.velocity = transform.right * speed;
-            //new Vector2(speed, body.velocity.y);
+            body.velocity = transform.right * speed * SpeedScale;
         }
 
         //Jump
         if (isGrounded && !isJumping && Input.GetMouseButtonDown(0)) {
             isJumping = true;
             body.AddForce((Vector2)transform.up * jumpForce, ForceMode2D.Impulse);
+            //body.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
 
             if (anim != null)
                 anim.SetTrigger("Jump");
         }
     }
-
 
     void DoGroundCheck() {
         RaycastHit2D hit = Physics2D.Raycast(body.position, -Vector2.up, groundCheckDistance, groundMask);
@@ -64,7 +76,7 @@ public class PlayerController : MonoBehaviour {
                 return;
             }
             //Align with ground (slowly)
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, rot, Time.deltaTime * 80f);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, rot, Time.deltaTime * 80f * SpeedScale);
 
         } else {
             if (isGrounded) {
@@ -75,7 +87,6 @@ public class PlayerController : MonoBehaviour {
     //We are no longer grounded
     void OnLeaveGround() {
         isGrounded = false;
-        //print("OnLeaveGround");
 
         trackTrailR.emitting = false;
         trackTrailL.emitting = false;
@@ -86,9 +97,9 @@ public class PlayerController : MonoBehaviour {
     //We are grounded again
     void OnHitGround() {
         isGrounded = true;
-        //print("OnHitGround");
 
         isJumping = false;
+
         trackTrailR.emitting = true;
         trackTrailL.emitting = true;
         trailParticles.Play();
