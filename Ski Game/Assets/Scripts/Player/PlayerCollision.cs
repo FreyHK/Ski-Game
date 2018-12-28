@@ -12,6 +12,7 @@ public class PlayerCollision : MonoBehaviour
     {
         if (collision.collider.tag == "Obstacle")
         {
+            print("Player died");
             if (OnPlayerDied != null)
                 OnPlayerDied();
         }

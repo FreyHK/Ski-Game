@@ -7,7 +7,7 @@ public class GameRestarter : MonoBehaviour
 {
     private void Start()
     {
-        PlayerCollision.OnPlayerDied += Restart;
+        //PlayerCollision.OnPlayerDied += Restart;
     }
 
     public void Restart()

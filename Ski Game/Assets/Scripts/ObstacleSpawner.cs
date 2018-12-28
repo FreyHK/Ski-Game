@@ -13,8 +13,8 @@ public class ObstacleSpawner : MonoBehaviour
     float spawnDistance = 20f;
 
     //How many units are there between obstacles
-    float minSpawnSpacing = 16f;
-    float maxSpawnSpacing = 25f;
+    float minSpawnSpacing = 12f;
+    float maxSpawnSpacing = 24f;
 
     float currentX;
 

@@ -14,7 +14,11 @@ public class GameSpeedController : MonoBehaviour
 
     void Update()
     {
-        speed += Time.deltaTime * .02f * speed;
+        if (GameManager.State != GameState.InGame)
+            return;
+
+        //speed += Time.deltaTime * .02f * speed;
+        speed += Time.deltaTime * .05f;
         //print("Speed: " + speed);
 
         playerController.SpeedScale = speed;

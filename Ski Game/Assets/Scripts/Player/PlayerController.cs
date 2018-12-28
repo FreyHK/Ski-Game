@@ -21,6 +21,7 @@ public class PlayerController : MonoBehaviour {
 
     //Public fields used by scripts
     public float SpeedScale = 1f;
+    public bool IsFrozen = false;
 
     void Start () {
         body = GetComponent<Rigidbody2D>();
@@ -34,8 +35,11 @@ public class PlayerController : MonoBehaviour {
 
         if (hit.collider != null) {
             transform.position = hit.point + Vector2.up * .6f;
+            //Align with ground
+            Quaternion rot = Quaternion.LookRotation(Vector3.forward, (Vector3)hit.normal);
+            transform.rotation = rot;
         }
-        //Enable trails (should be disabled in scene, avoids visual glitch)
+        //Enable trails (should be disabled in scene to avoid visual glitch)
         trackTrailR.enabled = true;
         trackTrailL.enabled = true;
     }
@@ -44,6 +48,9 @@ public class PlayerController : MonoBehaviour {
     float jumpForce = 14f;
 
     void Update () {
+        if (IsFrozen)
+            return;
+
         DoGroundCheck();
         if (anim != null)
             anim.SetBool("IsGrounded", isGrounded);
