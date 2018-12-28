@@ -13,11 +13,15 @@ public class UIGameOverPanel : MonoBehaviour
         PlayerCollision.OnPlayerDied += Open;
     }
 
+    private void OnDestroy() {
+        PlayerCollision.OnPlayerDied -= Open;
+    }
+
     void Open() {
         if (anim != null)
             anim.SetTrigger("Open");
 
-        scoreText.text = "You descended " + ScoreManager.CurrentScore.ToString("0.0") + "m.";
-        highscoreText.text = "Best: " + ScoreManager.HighScore.ToString("0.0") + "m";
+        scoreText.text = "Descended\n" + ScoreManager.CurrentScore.ToString("0.0") + "m";
+        highscoreText.text = "Best\n" + ScoreManager.HighScore.ToString("0.0") + "m";
     }
 }

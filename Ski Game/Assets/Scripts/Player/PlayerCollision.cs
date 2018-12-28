@@ -5,14 +5,12 @@ using System;
 
 public class PlayerCollision : MonoBehaviour
 {
-
     public static Action OnPlayerDied;
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.collider.tag == "Obstacle")
         {
-            print("Player died");
             if (OnPlayerDied != null)
                 OnPlayerDied();
         }

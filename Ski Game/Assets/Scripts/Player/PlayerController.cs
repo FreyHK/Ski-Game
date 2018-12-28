@@ -48,8 +48,11 @@ public class PlayerController : MonoBehaviour {
     float jumpForce = 14f;
 
     void Update () {
-        if (IsFrozen)
+        if (IsFrozen) {
+            //Don't move
+            body.velocity = Vector2.zero;
             return;
+        }
 
         DoGroundCheck();
         if (anim != null)

@@ -20,6 +20,15 @@ public class ScoreManager : MonoBehaviour
         scoreText.text = "";
     }
 
+    //Called when game restarts (on scene load), or when player exits app
+    private void OnDestroy() {
+        //Unsubscribe
+        PlayerCollision.OnPlayerDied -= ValidateScore;
+
+        //Save highscore to integer (x10 to save .0)
+        PlayerPrefs.SetInt("HighScore", Mathf.FloorToInt(HighScore * 10f));
+    }
+
     public static float HighScore { get; private set; }
     public static float CurrentScore { get; private set; }
 
@@ -37,11 +46,5 @@ public class ScoreManager : MonoBehaviour
         if (CurrentScore > HighScore) {
             HighScore = CurrentScore;
         }
-    }
-
-    //Called when game restarts (on scene load), or when player exits app
-    private void OnDestroy() {
-        //Save highscore to integer (x10 to save .0)
-        PlayerPrefs.SetInt("HighScore", Mathf.FloorToInt(HighScore * 10f));
     }
 }

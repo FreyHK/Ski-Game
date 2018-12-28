@@ -15,15 +15,18 @@ public class GameManager : MonoBehaviour
     public PlayerController playerController;
     public Rigidbody2D playerBody;
 
-    void Start()
-    {
+    void Start() {
         PlayerCollision.OnPlayerDied += OnPlayerDied;
 
         State = GameState.InMenu;
         playerBody.isKinematic = true;
         playerController.IsFrozen = true;
     }
-    
+
+    private void OnDestroy() {
+        PlayerCollision.OnPlayerDied -= OnPlayerDied;
+    }
+
     public void StartGame() {
         State = GameState.InGame;
 
@@ -33,8 +36,9 @@ public class GameManager : MonoBehaviour
 
     void OnPlayerDied() {
         State = GameState.GameOver;
-        //playerBody.isKinematic = true;
-        //playerController.IsFrozen = true;
-        //TODO: show menu
+        if (playerBody != null) {
+            playerBody.isKinematic = true;
+            playerController.IsFrozen = true;
+        }
     }
 }
