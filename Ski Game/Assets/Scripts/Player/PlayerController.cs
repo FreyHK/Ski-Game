@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour {
     bool isGrounded = false;
 
     public LayerMask groundMask;
-    float groundCheckDistance = .7f;
+    float groundCheckDistance = .9f;
 
     //Effects
     [SerializeField] ParticleSystem trailParticles;
