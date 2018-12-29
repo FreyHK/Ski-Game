@@ -67,10 +67,16 @@ public class ChunkMesh : MonoBehaviour {
     void GenerateCollider(float[] heights) {
         List<Vector2> points = new List<Vector2>();
         points.Add(new Vector2(0f, 0f));
-        points.Add(new Vector2(ChunkGenerator.ChunkSize, 0f));
+        //Offset slighty (to overlay next chunk)
+        points.Add(new Vector2(ChunkGenerator.ChunkSize + .1f, 0f));
 
         for (int i = 0; i < heights.Length; i++) {
-            points.Add(new Vector3(i * vertexSpacing, heights[i]));
+            //Is this the last vertex?
+            if (i == heights.Length - 1) {
+                //Then offset slightly to the right
+                points.Add(new Vector3(i * vertexSpacing + .1f, heights[i]));
+            } else
+                points.Add(new Vector3(i * vertexSpacing, heights[i]));
         }
 
         polygonCollider.points = points.ToArray();
