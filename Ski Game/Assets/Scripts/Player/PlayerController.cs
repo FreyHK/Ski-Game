@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour {
     bool isGrounded = false;
 
     public LayerMask groundMask;
-    float groundCheckDistance = .9f;
+    float groundCheckDistance = .95f;
 
     //Effects
     [SerializeField] ParticleSystem trailParticles;
@@ -86,7 +86,7 @@ public class PlayerController : MonoBehaviour {
                 return;
             }
             //Align with ground (slowly)
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, rot, Time.deltaTime * 80f * SpeedScale);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, rot, Time.deltaTime * 200f * SpeedScale);
 
         } else {
             if (isGrounded) {
