@@ -44,8 +44,8 @@ public class PlayerController : MonoBehaviour {
         trackTrailL.enabled = true;
     }
 
-    float speed = 6f;
-    float jumpForce = 14f;
+    public float Speed = 6f;
+    public float JumpForce = 14f;
 
     void Update () {
         if (IsFrozen) {
@@ -60,13 +60,13 @@ public class PlayerController : MonoBehaviour {
 
         //Clamp movement
         if (isGrounded && !isJumping) {
-            body.velocity = transform.right * speed * SpeedScale;
+            body.velocity = transform.right * Speed * SpeedScale;
         }
 
         //Jump
         if (isGrounded && !isJumping && Input.GetMouseButtonDown(0)) {
             isJumping = true;
-            body.AddForce((Vector2)transform.up * jumpForce, ForceMode2D.Impulse);
+            body.AddForce((Vector2)transform.up * JumpForce, ForceMode2D.Impulse);
             //body.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
 
             if (anim != null)

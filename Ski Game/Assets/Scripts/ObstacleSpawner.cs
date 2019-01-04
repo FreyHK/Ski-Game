@@ -7,14 +7,14 @@ public class ObstacleSpawner : MonoBehaviour
     public Transform obstacleRoot;
     public Transform playerTransform;
 
-    public GameObject obstaclePrefab;
+    public GameObject[] obstaclePrefabs;
 
     //How far in front of the player do obstacles spawn?
     float spawnDistance = 20f;
 
     //How many units are there between obstacles
-    float minSpawnSpacing = 12f;
-    float maxSpawnSpacing = 24f;
+    float minSpawnSpacing = 10f;
+    float maxSpawnSpacing = 20f;
 
     float currentX;
 
@@ -73,7 +73,8 @@ public class ObstacleSpawner : MonoBehaviour
         Quaternion rot = Quaternion.LookRotation(Vector3.forward, (Vector3)hit.normal);
         Vector3 pos = hit.point;
 
-        GameObject gm = Instantiate(obstaclePrefab, pos, rot);
+        GameObject prefab = obstaclePrefabs[Random.Range(0, obstaclePrefabs.Length)];
+        GameObject gm = Instantiate(prefab, pos, rot);
         gm.transform.parent = obstacleRoot;
         obstacles.Add(gm.transform);
     }

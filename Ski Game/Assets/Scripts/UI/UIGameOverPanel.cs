@@ -21,7 +21,9 @@ public class UIGameOverPanel : MonoBehaviour
         if (anim != null)
             anim.SetTrigger("Open");
 
-        scoreText.text = "Descended\n" + ScoreManager.CurrentScore.ToString("0.0") + "m";
-        highscoreText.text = "Best\n" + ScoreManager.HighScore.ToString("0.0") + "m";
+        scoreText.text = "Descended\n" + TextFormatter.GetDistance(Mathf.FloorToInt(ScoreManager.CurrentScore));
+            //ScoreManager.CurrentScore.ToString("0.0") + "m";
+        highscoreText.text = "Best\n" + TextFormatter.GetDistance(ScoreManager.HighScore);
+            //ScoreManager.HighScore.ToString("0.0") + "m";
     }
 }

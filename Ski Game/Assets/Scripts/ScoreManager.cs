@@ -5,7 +5,7 @@ using TMPro;
 
 public class ScoreManager : MonoBehaviour
 {
-    public Transform playerTransform;
+    public PlayerController playerController;
     public TextMeshProUGUI scoreText;
 
     void Start()
@@ -14,9 +14,9 @@ public class ScoreManager : MonoBehaviour
 
         PlayerCollision.OnPlayerDied += ValidateScore;
         //Highscore is saved as integer (divide by 10 to get .0)
-        HighScore = (float)PlayerPrefs.GetInt("HighScore", 0)/10f;
+        HighScore = PlayerPrefs.GetInt("HighScore", 0);
 
-        CurrentScore = 0;
+        CurrentScore = 0f;
         scoreText.text = "";
     }
 
@@ -26,25 +26,31 @@ public class ScoreManager : MonoBehaviour
         PlayerCollision.OnPlayerDied -= ValidateScore;
 
         //Save highscore to integer (x10 to save .0)
-        PlayerPrefs.SetInt("HighScore", Mathf.FloorToInt(HighScore * 10f));
+        PlayerPrefs.SetInt("HighScore", HighScore);
     }
 
-    public static float HighScore { get; private set; }
+    public static int HighScore { get; private set; }
     public static float CurrentScore { get; private set; }
 
     void Update()
     {
-        float s = -playerTransform.position.y/2f;
-        if (s > CurrentScore) {
-            CurrentScore = s;
-            scoreText.text = CurrentScore.ToString("0.0");
+        if (GameManager.State == GameState.InGame) {
+            CurrentScore += playerController.Speed * playerController.SpeedScale * Time.deltaTime / 2f;
+            
+            scoreText.text = TextFormatter.GetDistance(Mathf.FloorToInt(CurrentScore));
         }
+        //float s = -playerTransform.position.y/2f;
+        //if (s > CurrentScore) {
+        //    CurrentScore = s;
+        //}
     }
 
     //Triggered when round ends
     void ValidateScore() {
         if (CurrentScore > HighScore) {
-            HighScore = CurrentScore;
+            HighScore = Mathf.FloorToInt(CurrentScore);
+            
+            //TODO: callback
         }
     }
 }
