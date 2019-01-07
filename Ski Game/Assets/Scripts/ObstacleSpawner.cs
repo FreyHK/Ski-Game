@@ -2,12 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public class ObstaclePrefab {
+    public GameObject prefab;
+    public bool StayUpright = false;
+}
+
 public class ObstacleSpawner : MonoBehaviour
 {
     public Transform obstacleRoot;
     public Transform playerTransform;
 
-    public GameObject[] obstaclePrefabs;
+    public ObstaclePrefab[] obstaclePrefabs;
+    public MovingObstacle movingObstaclePrefab;
 
     //How far in front of the player do obstacles spawn?
     float spawnDistance = 20f;
@@ -36,7 +43,11 @@ public class ObstacleSpawner : MonoBehaviour
         if (playerTransform.position.x + spawnDistance > currentX + spacing * SpeedScale)
         {
             currentX += spacing * SpeedScale;
-            SpawnObstacle(currentX);
+            if (Random.value < .75) {
+                SpawnStaticObstacle(currentX);
+            }else {
+                SpawnMovingObstacle(currentX);
+            }
             spacing = Random.Range(minSpawnSpacing, maxSpawnSpacing);
         }
 
@@ -58,7 +69,7 @@ public class ObstacleSpawner : MonoBehaviour
 
     public LayerMask groundMask;
 
-    void SpawnObstacle(float x)
+    void SpawnStaticObstacle(float x)
     {
         Vector3 origin = new Vector3(x, playerTransform.position.y + 10f);
         RaycastHit2D hit = Physics2D.Raycast(origin, -Vector2.up, 9999f, groundMask);
@@ -68,14 +79,41 @@ public class ObstacleSpawner : MonoBehaviour
             Debug.LogWarning("Raycast did not hit ground. Can't spawn obstacle.");
             return;
         }
+        int prefabIndex = Random.Range(0, obstaclePrefabs.Length);
 
         //Find rotation
-        Quaternion rot = Quaternion.LookRotation(Vector3.forward, (Vector3)hit.normal);
+        Quaternion rot;
+        if (obstaclePrefabs[prefabIndex].StayUpright) {
+            rot = Quaternion.identity;
+        } else {
+            rot = Quaternion.LookRotation(Vector3.forward, (Vector3)hit.normal);
+        }
         Vector3 pos = hit.point;
-
-        GameObject prefab = obstaclePrefabs[Random.Range(0, obstaclePrefabs.Length)];
-        GameObject gm = Instantiate(prefab, pos, rot);
+        GameObject gm = Instantiate(obstaclePrefabs[prefabIndex].prefab, pos, rot);
         gm.transform.parent = obstacleRoot;
         obstacles.Add(gm.transform);
+    }
+
+    void SpawnMovingObstacle(float x) {
+        Vector3 origin = new Vector3(x, playerTransform.position.y + 10f);
+        RaycastHit2D hit = Physics2D.Raycast(origin, -Vector2.up, 9999f, groundMask);
+
+        if (hit.collider == null) {
+            Debug.LogWarning("Raycast did not hit ground. Can't spawn obstacle.");
+            return;
+        }
+        
+        Vector3 pos;
+        if (Random.value < .5f) {
+            pos = (Vector3)hit.point + Vector3.up * 1f;
+        } else {
+            pos = (Vector3)hit.point + Vector3.up * 5f;
+        }
+        //Find rotation
+        Quaternion rot = Quaternion.LookRotation(Vector3.forward, (Vector3)hit.normal);
+
+        MovingObstacle mo = Instantiate(movingObstaclePrefab, pos, rot);
+        mo.transform.parent = obstacleRoot;
+        obstacles.Add(mo.transform);
     }
 }

@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviour
     void OnPlayerDied() {
         State = GameState.GameOver;
         if (playerBody != null) {
-            playerBody.isKinematic = true;
+            //playerBody.isKinematic = true;
             playerController.IsFrozen = true;
         }
     }

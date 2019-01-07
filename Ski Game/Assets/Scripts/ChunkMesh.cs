@@ -36,7 +36,7 @@ public class ChunkMesh : MonoBehaviour {
         for (int i = 0, y = 0; y < 2; y++) {
             for (int x = 0; x < heights.Length; x++, i++) {
                 //Make sure we have lots of snow below playable area.
-                float h = -25f;
+                float h = -35f;
                 if (y == 1) {
                     h = heights[x];
                 }

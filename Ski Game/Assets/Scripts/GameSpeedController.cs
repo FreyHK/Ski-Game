@@ -10,17 +10,21 @@ public class GameSpeedController : MonoBehaviour
     public PlayerController playerController;
     public ObstacleSpawner obstacleSpawner;
 
-    float speed = 1.5f;
+    public static float SpeedScale { get; private set; }
+
+    private void Awake() {
+        SpeedScale = 1.5f;
+    }
 
     void Update()
     {
         if (GameManager.State != GameState.InGame)
             return;
-        
-        speed += Time.deltaTime * .05f;
+
+        SpeedScale += Time.deltaTime * .1f; //.05f;
         //print("Speed: " + speed);
 
-        playerController.SpeedScale = speed;
-        obstacleSpawner.SpeedScale = speed;
+        playerController.SpeedScale = SpeedScale;
+        obstacleSpawner.SpeedScale = SpeedScale;
     }
 }

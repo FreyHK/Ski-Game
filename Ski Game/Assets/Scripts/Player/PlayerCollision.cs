@@ -11,6 +11,7 @@ public class PlayerCollision : MonoBehaviour
     {
         if (collision.collider.tag == "Obstacle")
         {
+            Debug.Log("Player hit: " + collision.collider.name);
             if (OnPlayerDied != null)
                 OnPlayerDied();
         }

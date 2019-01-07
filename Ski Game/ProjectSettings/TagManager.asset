@@ -48,6 +48,9 @@ TagManager:
   - name: BG_Effects
     uniqueID: 868827539
     locked: 0
+  - name: Terrain
+    uniqueID: 3826166363
+    locked: 0
   - name: Character
     uniqueID: 2601464621
     locked: 0

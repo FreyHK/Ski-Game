@@ -48,15 +48,18 @@ public class PlayerController : MonoBehaviour {
     public float JumpForce = 14f;
 
     void Update () {
-        if (IsFrozen) {
-            //Don't move
-            body.velocity = Vector2.zero;
-            return;
-        }
-
+        //Visuals
         DoGroundCheck();
         if (anim != null)
             anim.SetBool("IsGrounded", isGrounded);
+
+        if (IsFrozen) {
+            //Don't move
+            if (isGrounded)
+                body.velocity = Vector2.zero;
+
+            return;
+        }
 
         //Clamp movement
         if (isGrounded && !isJumping) {
