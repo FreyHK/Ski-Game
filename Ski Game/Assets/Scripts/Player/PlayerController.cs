@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour {
@@ -19,9 +20,14 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] TrailRenderer trackTrailR;
     [SerializeField] TrailRenderer trackTrailL;
 
+    //Audio
+    [SerializeField] AudioSource audioSource;
+    [SerializeField] AudioSource groundedAudioSource;
+    [SerializeField] AudioClip jumpSound;
+    [SerializeField] AudioClip landSound;
+
     //Public fields used by scripts
     public float SpeedScale = 1f;
-    public bool IsFrozen = false;
 
     void Start () {
         body = GetComponent<Rigidbody2D>();
@@ -44,6 +50,25 @@ public class PlayerController : MonoBehaviour {
         trackTrailL.enabled = true;
     }
 
+    bool isMoving = false;
+
+    /// <summary>
+    /// Called by GameManager
+    /// </summary>
+    public void StartMoving ()
+    {
+        isMoving = true;
+
+        groundedAudioSource.Play();
+    }
+
+    public void StopMoving()
+    {
+        isMoving = false;
+
+        groundedAudioSource.Stop();
+    }
+
     public float Speed = 6f;
     public float JumpForce = 14f;
 
@@ -53,7 +78,7 @@ public class PlayerController : MonoBehaviour {
         if (anim != null)
             anim.SetBool("IsGrounded", isGrounded);
 
-        if (IsFrozen) {
+        if (!isMoving) {
             //Don't move
             if (isGrounded)
                 body.velocity = Vector2.zero;
@@ -67,7 +92,7 @@ public class PlayerController : MonoBehaviour {
         }
 
         //Jump
-        if (isGrounded && !isJumping && Input.GetMouseButtonDown(0)) {
+        if (CanJump()) {
             isJumping = true;
             body.AddForce((Vector2)transform.up * JumpForce, ForceMode2D.Impulse);
             //body.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
@@ -75,6 +100,11 @@ public class PlayerController : MonoBehaviour {
             if (anim != null)
                 anim.SetTrigger("Jump");
         }
+    }
+
+    bool CanJump ()
+    {
+        return isGrounded && !isJumping && Input.anyKeyDown;
     }
 
     void DoGroundCheck() {
@@ -105,6 +135,12 @@ public class PlayerController : MonoBehaviour {
         trackTrailL.emitting = false;
         trailParticles.Stop();
         SpawnImpactEffect();
+
+        if (groundedAudioSource != null)
+        {
+            audioSource.PlayOneShot(jumpSound);
+            groundedAudioSource.Stop();
+        }
     }
 
     //We are grounded again
@@ -117,6 +153,14 @@ public class PlayerController : MonoBehaviour {
         trackTrailL.emitting = true;
         trailParticles.Play();
         SpawnImpactEffect();
+
+        if (groundedAudioSource != null)
+        {
+            audioSource.PlayOneShot(landSound);
+
+            if (GameManager.State == GameState.InGame)
+                groundedAudioSource.Play();
+        }
     }
 
     public GameObject impactParticles;

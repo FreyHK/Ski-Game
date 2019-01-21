@@ -7,17 +7,27 @@ public class ScoreManager : MonoBehaviour
 {
     public PlayerController playerController;
     public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI highscoreText;
 
     void Start()
     {
-        //PlayerPrefs.SetInt("HighScore", 0);
-
         PlayerCollision.OnPlayerDied += ValidateScore;
         //Highscore is saved as integer (divide by 10 to get .0)
         HighScore = PlayerPrefs.GetInt("HighScore", 0);
 
         CurrentScore = 0f;
         scoreText.text = "";
+        if (HighScore == 0)
+            highscoreText.text = "";
+        else
+            highscoreText.text = "High: " + TextFormatter.GetDistance(HighScore);
+    }
+
+    public void ResetScore()
+    {
+        PlayerPrefs.SetInt("HighScore", 0);
+        HighScore = 0;
+        highscoreText.text = "";
     }
 
     //Called when game restarts (on scene load), or when player exits app
@@ -39,10 +49,6 @@ public class ScoreManager : MonoBehaviour
             
             scoreText.text = TextFormatter.GetDistance(Mathf.FloorToInt(CurrentScore));
         }
-        //float s = -playerTransform.position.y/2f;
-        //if (s > CurrentScore) {
-        //    CurrentScore = s;
-        //}
     }
 
     //Triggered when round ends

@@ -43,11 +43,11 @@ public class ObstacleSpawner : MonoBehaviour
         if (playerTransform.position.x + spawnDistance > currentX + spacing * SpeedScale)
         {
             currentX += spacing * SpeedScale;
-            if (Random.value < .75) {
+            //if (Random.value < .75) {
                 SpawnStaticObstacle(currentX);
-            }else {
-                SpawnMovingObstacle(currentX);
-            }
+            //}else {
+            //    SpawnMovingObstacle(currentX);
+            //}
             spacing = Random.Range(minSpawnSpacing, maxSpawnSpacing);
         }
 

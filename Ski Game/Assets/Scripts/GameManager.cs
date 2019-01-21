@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
 
         State = GameState.InMenu;
         playerBody.isKinematic = true;
-        playerController.IsFrozen = true;
+        playerController.StopMoving();
     }
 
     private void OnDestroy() {
@@ -30,15 +30,22 @@ public class GameManager : MonoBehaviour
     public void StartGame() {
         State = GameState.InGame;
 
+        Invoke("ActivatePlayer", .1f);
+    }
+
+    /// <summary>
+    /// Bad fix for player jumping on the frame you press start.
+    /// </summary>
+    void ActivatePlayer()
+    {
         playerBody.isKinematic = false;
-        playerController.IsFrozen = false;
+        playerController.StartMoving();
     }
 
     void OnPlayerDied() {
         State = GameState.GameOver;
-        if (playerBody != null) {
-            //playerBody.isKinematic = true;
-            playerController.IsFrozen = true;
-        }
+
+        //playerBody.isKinematic = true;
+        playerController.StopMoving();
     }
 }

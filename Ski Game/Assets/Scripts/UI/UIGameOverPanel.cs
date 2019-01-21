@@ -26,4 +26,10 @@ public class UIGameOverPanel : MonoBehaviour
         highscoreText.text = "Best\n" + TextFormatter.GetDistance(ScoreManager.HighScore);
             //ScoreManager.HighScore.ToString("0.0") + "m";
     }
+
+    //Called by UI button
+    public void Restart()
+    {
+        GameRestarter.Instance.Restart();
+    }
 }
