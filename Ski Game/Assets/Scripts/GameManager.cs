@@ -28,14 +28,15 @@ public class GameManager : MonoBehaviour
     }
 
     public void StartGame() {
-        State = GameState.InGame;
+        //We can only do this IF we are in menu
+        if (State != GameState.InMenu)
+            return;
 
+        State = GameState.InGame;
+        // Bad fix for player jumping on the frame you press start.
         Invoke("ActivatePlayer", .1f);
     }
 
-    /// <summary>
-    /// Bad fix for player jumping on the frame you press start.
-    /// </summary>
     void ActivatePlayer()
     {
         playerBody.isKinematic = false;
