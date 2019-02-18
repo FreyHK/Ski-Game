@@ -21,7 +21,7 @@ public class PlayerCollision : MonoBehaviour
             hasBeenHit = true;
 
             if (audioSource != null)
-                audioSource.PlayOneShot(hitSound, .65f);
+                audioSource.PlayOneShot(hitSound, .15f);
 
             CameraShaker.Instance.ShakeOnce(10f, 10f, .1f, .1f);
 
