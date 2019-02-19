@@ -12,6 +12,7 @@ public class GameRestarter : MonoBehaviour
     public static GameRestarter Instance;
 
     public Image overlayImage;
+    public AdManager adManager;
 
     private void Start()
     {
@@ -47,6 +48,10 @@ public class GameRestarter : MonoBehaviour
         AsyncOperation asyncUnload = SceneManager.UnloadSceneAsync(1);
         //Load new scene
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(1, LoadSceneMode.Additive);
+
+
+        //We can show ad while we wait.
+        adManager.TryShowAd();
 
         //Wait for both to finish
         while (!asyncLoad.isDone || !asyncUnload.isDone)
