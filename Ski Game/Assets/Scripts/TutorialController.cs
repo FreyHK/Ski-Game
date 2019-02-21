@@ -19,8 +19,14 @@ public class TutorialController : MonoBehaviour
 
     void OnPlayerDied()
     {
-
         //Load tutorial again
         GameInitializer.Instance.Restart(true);
+    }
+
+    public void OnPlayerReachedEnd() {
+        //Save that player completed tutorial
+
+        //Load main game
+        GameInitializer.Instance.Restart(false);
     }
 }
