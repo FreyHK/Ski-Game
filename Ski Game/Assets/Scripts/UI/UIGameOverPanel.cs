@@ -30,6 +30,6 @@ public class UIGameOverPanel : MonoBehaviour
     //Called by UI button
     public void Restart()
     {
-        GameRestarter.Instance.Restart();
+        GameInitializer.Instance.Restart();
     }
 }

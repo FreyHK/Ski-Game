@@ -104,7 +104,7 @@ public class PlayerController : MonoBehaviour {
 
     bool CanJump ()
     {
-        return isGrounded && !isJumping && Input.anyKeyDown;
+        return isGrounded && !isJumping && Input.GetMouseButtonDown(0);
     }
 
     void DoGroundCheck() {

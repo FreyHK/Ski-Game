@@ -7,31 +7,44 @@ using UnityEngine.UI;
 /// <summary>
 /// This class belongs to persistent scene
 /// </summary>
-public class GameRestarter : MonoBehaviour
+public class GameInitializer : MonoBehaviour
 {
-    public static GameRestarter Instance;
+    public static GameInitializer Instance;
 
     public Image overlayImage;
     public AdManager adManager;
 
-    private void Start()
-    {
+    Scene loadedScene;
+
+    LoadSceneParameters loadParameters = new LoadSceneParameters(LoadSceneMode.Additive);
+
+    private void Start() {
         Instance = this;
 
         Color c = overlayImage.color;
         c.a = 0f;
         overlayImage.color = c;
 
-        if (SceneManager.sceneCount == 1)
-            SceneManager.LoadScene(1, LoadSceneMode.Additive);
+        bool playTutorial = true;
+
+        if (playTutorial) {
+            //Load tutorial
+            if (SceneManager.sceneCount == 1)
+                loadedScene = SceneManager.LoadScene(2, loadParameters);
+        } else {
+            //Only load mainScene if we haven't already (used in editor)
+            if (SceneManager.sceneCount == 1)
+                loadedScene = SceneManager.LoadScene(1, loadParameters);
+        }
     }
 
-    public void Restart()
+    public void Restart(bool loadTutorial = false)
     {
-        StartCoroutine(ReloadScene());
+        int index = loadTutorial ? 2 : 1;
+        StartCoroutine(ReloadScene(index));
     }
 
-    IEnumerator ReloadScene()
+    IEnumerator ReloadScene(int buildIndex)
     {
         //Fade 
         Color c = overlayImage.color;
@@ -45,10 +58,9 @@ public class GameRestarter : MonoBehaviour
         }
 
         //Unload old scene
-        AsyncOperation asyncUnload = SceneManager.UnloadSceneAsync(1);
+        AsyncOperation asyncUnload = SceneManager.UnloadSceneAsync(loadedScene);
         //Load new scene
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(1, LoadSceneMode.Additive);
-
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(buildIndex, loadParameters);
 
         //We can show ad while we wait.
         adManager.TryShowAd();
@@ -58,6 +70,8 @@ public class GameRestarter : MonoBehaviour
         {
             yield return null;
         }
+        //Remember loaded scene (used when unloading)
+        loadedScene = SceneManager.GetSceneAt(1);
 
         //Fade
         t = 0f;

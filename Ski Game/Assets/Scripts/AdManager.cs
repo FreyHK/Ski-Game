@@ -15,11 +15,12 @@ public class AdManager : MonoBehaviour
 
     void Awake()
     {
-
         if (Application.platform == RuntimePlatform.Android)
             Advertisement.Initialize(AndroidGameId, true);
-        else
+        else if (Application.platform == RuntimePlatform.IPhonePlayer)
             Advertisement.Initialize(IOSGameId, true);
+        else
+            Advertisement.Initialize("33675", true);
 
         adTimer = (float)PlayerPrefs.GetInt("AdTimer", AdTimerDuration);
     }
