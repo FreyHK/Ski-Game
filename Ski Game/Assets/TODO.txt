@@ -1,7 +1,0 @@
-
-
-Before releasing:
-Activate tutorial + ads
-
-Bugs:
-Ads might not be working

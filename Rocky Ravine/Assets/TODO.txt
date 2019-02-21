@@ -1,0 +1,6 @@
+
+
+Before releasing:
+Activate tutorial + turn off testmode on ads
+
+Bugs:
