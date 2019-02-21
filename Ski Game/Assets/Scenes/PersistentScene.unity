@@ -340,7 +340,7 @@ GameObject:
   - component: {fileID: 2142126114}
   - component: {fileID: 2142126116}
   m_Layer: 0
-  m_Name: GameRestarter
+  m_Name: GameInitializer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -20,14 +20,16 @@ public class GameInitializer : MonoBehaviour
 
     private void Start() {
         Instance = this;
-
+        //Hide overlayimage
         Color c = overlayImage.color;
         c.a = 0f;
         overlayImage.color = c;
 
-        bool playTutorial = true;
+        //FIXME this is for testing
+        bool playerTutorial = true;
+            //!PlayerPrefs.HasKey("CompletedTutorial");
 
-        if (playTutorial) {
+        if (playerTutorial) {
             //Load tutorial
             if (SceneManager.sceneCount == 1)
                 loadedScene = SceneManager.LoadScene(2, loadParameters);

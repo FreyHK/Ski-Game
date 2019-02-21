@@ -25,6 +25,7 @@ public class TutorialController : MonoBehaviour
 
     public void OnPlayerReachedEnd() {
         //Save that player completed tutorial
+        PlayerPrefs.SetInt("CompletedTutorial", 1);
 
         //Load main game
         GameInitializer.Instance.Restart(false);

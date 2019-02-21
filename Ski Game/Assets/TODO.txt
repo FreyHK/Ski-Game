@@ -1,14 +1,7 @@
 
 
-tutorial (seperate scene):
--Simple hill
--Rock in the way
--Show hand tapping
--Player jumps
--Few more rocks
--Finish line?
--Save in playerprefs that player completed tutorial
--Load actual scene
+Before releasing:
+Activate tutorial + ads
 
 Bugs:
 Ads might not be working
