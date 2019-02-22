@@ -5,11 +5,13 @@ using UnityEngine.Advertisements;
 
 public class AdManager : MonoBehaviour
 {
-    #if UNITY_ANDROID
+#if UNITY_ANDROID
     const string gameId = "3049309";
-    #elif UNITY_IOS
+#elif UNITY_IOS
     const string gameId = "3049308";
-    #endif
+#else
+    const string gameId = "3049308";
+#endif
 
     //In seconds
     const int AdTimerDuration = 60;
