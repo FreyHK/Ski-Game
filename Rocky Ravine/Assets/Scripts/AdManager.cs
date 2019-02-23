@@ -20,7 +20,7 @@ public class AdManager : MonoBehaviour
     void Awake()
     {
         if (Advertisement.isSupported)
-            Advertisement.Initialize(gameId, true);
+            Advertisement.Initialize(gameId, false);
 
         //Debugging
         print("ADINFO - IsInitialized: " + Advertisement.isInitialized + ", IsReady: " + Advertisement.IsReady() + ", Timer: " + adTimer.ToString());
