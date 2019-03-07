@@ -8,13 +8,13 @@ public class TutorialController : MonoBehaviour
 
     void Start()
     {
-        PlayerCollision.OnPlayerDied += OnPlayerDied;
+        PlayerCollision.OnHitObstacle += OnPlayerDied;
 
         PlayerController.StartMoving();
     }
 
     private void OnDestroy() {
-        PlayerCollision.OnPlayerDied -= OnPlayerDied;
+        PlayerCollision.OnHitObstacle -= OnPlayerDied;
     }
 
     void OnPlayerDied()

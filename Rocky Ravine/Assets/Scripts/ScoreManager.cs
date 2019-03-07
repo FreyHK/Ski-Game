@@ -11,7 +11,7 @@ public class ScoreManager : MonoBehaviour
 
     void Start()
     {
-        PlayerCollision.OnPlayerDied += ValidateScore;
+        PlayerCollision.OnHitObstacle += ValidateScore;
         //Highscore is saved as integer (divide by 10 to get .0)
         HighScore = PlayerPrefs.GetInt("HighScore", 0);
 
@@ -33,7 +33,7 @@ public class ScoreManager : MonoBehaviour
     //Called when game restarts (on scene load), or when player exits app
     private void OnDestroy() {
         //Unsubscribe
-        PlayerCollision.OnPlayerDied -= ValidateScore;
+        PlayerCollision.OnHitObstacle -= ValidateScore;
 
         //Save highscore to integer (x10 to save .0)
         PlayerPrefs.SetInt("HighScore", HighScore);

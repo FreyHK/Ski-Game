@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
     public Rigidbody2D playerBody;
 
     void Start() {
-        PlayerCollision.OnPlayerDied += OnPlayerDied;
+        PlayerCollision.OnHitObstacle += OnPlayerDied;
 
         State = GameState.InMenu;
         playerBody.isKinematic = true;
@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
     }
 
     private void OnDestroy() {
-        PlayerCollision.OnPlayerDied -= OnPlayerDied;
+        PlayerCollision.OnHitObstacle -= OnPlayerDied;
     }
 
     public void StartGame() {

@@ -10,11 +10,11 @@ public class UIGameOverPanel : MonoBehaviour
     public TextMeshProUGUI scoreText;
 
     void Start() {
-        PlayerCollision.OnPlayerDied += Open;
+        PlayerCollision.OnHitObstacle += Open;
     }
 
     private void OnDestroy() {
-        PlayerCollision.OnPlayerDied -= Open;
+        PlayerCollision.OnHitObstacle -= Open;
     }
 
     void Open() {

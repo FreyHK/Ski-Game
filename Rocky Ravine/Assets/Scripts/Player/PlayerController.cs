@@ -29,9 +29,15 @@ public class PlayerController : MonoBehaviour {
     //Public fields used by scripts
     public float SpeedScale = 1f;
 
-    void Start () {
+
+
+    void Awake()
+    {
         body = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+    }
+
+    void Start () {
         trailParticles.Stop();
         trackTrailR.emitting = false;
         trackTrailL.emitting = false;
@@ -65,6 +71,10 @@ public class PlayerController : MonoBehaviour {
     public void StopMoving()
     {
         isMoving = false;
+
+        body.velocity *= .25f;
+
+        //TODO half current velocity (or just reduce it)
 
         groundedAudioSource.Stop();
     }

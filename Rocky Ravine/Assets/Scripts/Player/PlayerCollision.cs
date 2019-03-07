@@ -10,7 +10,7 @@ public class PlayerCollision : MonoBehaviour
     [SerializeField] AudioSource audioSource;
     [SerializeField] AudioClip hitSound;
 
-    public static Action OnPlayerDied;
+    public static Action OnHitObstacle;
 
     bool hasBeenHit = false;
 
@@ -26,8 +26,8 @@ public class PlayerCollision : MonoBehaviour
             CameraShaker.Instance.ShakeOnce(10f, 10f, .1f, .1f);
 
             //Debug.Log("Player hit: " + collision.collider.name);
-            if (OnPlayerDied != null)
-                OnPlayerDied();
+            if (OnHitObstacle != null)
+                OnHitObstacle();
         }
     }
 }
