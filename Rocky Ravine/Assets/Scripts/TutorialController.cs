@@ -20,7 +20,7 @@ public class TutorialController : MonoBehaviour
     void OnPlayerDied()
     {
         //Load tutorial again
-        GameInitializer.Instance.Restart(true);
+        GameInitializer.Instance.LoadScene(2);
     }
 
     public void OnPlayerReachedEnd() {
@@ -28,6 +28,6 @@ public class TutorialController : MonoBehaviour
         PlayerPrefs.SetInt("CompletedTutorial", 1);
 
         //Load main game
-        GameInitializer.Instance.Restart(false);
+        GameInitializer.Instance.LoadScene(1);
     }
 }

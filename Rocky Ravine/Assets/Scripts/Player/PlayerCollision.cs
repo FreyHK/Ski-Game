@@ -6,10 +6,6 @@ using EZCameraShake;
 
 public class PlayerCollision : MonoBehaviour
 {
-    //Audio
-    [SerializeField] AudioSource audioSource;
-    [SerializeField] AudioClip hitSound;
-
     public static Action OnHitObstacle;
 
     bool hasBeenHit = false;
@@ -20,8 +16,7 @@ public class PlayerCollision : MonoBehaviour
         {
             hasBeenHit = true;
 
-            if (audioSource != null)
-                audioSource.PlayOneShot(hitSound, .15f);
+            AudioManager.Instance.Play("Hit");
 
             CameraShaker.Instance.ShakeOnce(10f, 10f, .1f, .1f);
 

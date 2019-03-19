@@ -26,25 +26,42 @@ public class GameInitializer : MonoBehaviour
         c.a = 0f;
         overlayImage.color = c;
 
-        if (!PlayerPrefs.HasKey("CompletedTutorial")) {
-            //Load tutorial
-            if (SceneManager.sceneCount == 1)
-                loadedScene = SceneManager.LoadScene(2, loadParameters);
-        } else {
-            //Only load mainScene if we haven't already (used in editor)
-            if (SceneManager.sceneCount == 1)
-                loadedScene = SceneManager.LoadScene(1, loadParameters);
+        if (SceneManager.sceneCount == 1)
+        {
+            //Scene 1 = main, 2 = tutorial
+            int index = PlayerPrefs.HasKey("CompletedTutorial") ? 1 : 2;
+
+            LoadScene(index, true);
         }
+        else
+            //Find the level, that we loaded in from editor.
+            loadedScene = SceneManager.GetSceneAt(1);
     }
 
-    public void Restart(bool loadTutorial = false)
+    public void LoadScene(int buildIndex, bool instant = false)
     {
-        int index = loadTutorial ? 2 : 1;
-        StartCoroutine(ReloadScene(index));
+        //Don't load if we are already
+        if (IsLoading)
+            return;
+
+        if (instant)
+        {
+            loadedScene = SceneManager.LoadScene(buildIndex, loadParameters);
+            //Remember loaded scene (used when unloading)
+            loadedScene = SceneManager.GetSceneAt(1);
+
+            return;
+        }
+        //Load with fading animations
+        StartCoroutine(LoadSceneAsync(buildIndex));
     }
 
-    IEnumerator ReloadScene(int buildIndex)
+    public bool IsLoading { get; private set; }
+
+    IEnumerator LoadSceneAsync(int buildIndex)
     {
+        IsLoading = true;
+
         //Fade 
         Color c = overlayImage.color;
         float t = 0f;
@@ -71,6 +88,9 @@ public class GameInitializer : MonoBehaviour
 
         //Try and show ad
         adManager.TryShowAd();
+
+        //Reset flag
+        IsLoading = false;
 
         //Fade
         t = 0f;
