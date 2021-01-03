@@ -7,6 +7,8 @@ using UnityEngine;
 [RequireComponent(typeof(PolygonCollider2D))]
 public class ChunkMesh : MonoBehaviour {
 
+    const int minHeight = -60;
+
     MeshFilter meshFilter;
     PolygonCollider2D polygonCollider;
 
@@ -22,6 +24,7 @@ public class ChunkMesh : MonoBehaviour {
         CreateMesh(heights);
     }
 
+
     float vertexSpacing;
 
     Mesh mesh;
@@ -35,8 +38,8 @@ public class ChunkMesh : MonoBehaviour {
         Vector3[] vertices = new Vector3[heights.Length * 2];
         for (int i = 0, y = 0; y < 2; y++) {
             for (int x = 0; x < heights.Length; x++, i++) {
-                //Make sure we have lots of snow below playable area.
-                float h = -35f;
+                //Make sure we have tons of snow below playable area.
+                float h = minHeight;
                 if (y == 1) {
                     h = heights[x];
                 }

@@ -16,7 +16,7 @@ public class ObstacleSpawner : MonoBehaviour
     public ObstaclePrefab[] obstaclePrefabs;
 
     //How far in front of the player do obstacles spawn?
-    float spawnDistance = 20f;
+    float spawnDistance = 40f;
 
     //How many units are there between obstacles
     float minSpawnSpacing = 10f;

@@ -22,7 +22,7 @@ public class ChunkGenerator : MonoBehaviour {
     }
 
     int CurrentChunkX = -2;
-    int ChunkViewDistance = 2;
+    int ChunkViewDistance = 4; //How many chunks to generate around of player
 
     void UpdateChunks() {
         //Player's position in chunk space
