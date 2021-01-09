@@ -2,40 +2,42 @@
 using UnityEngine;
 using GoogleMobileAds.Api;
 using GoogleMobileAds.Common;
-using UnityEngine.UI;
 using System;
-using System.Collections.Generic;
 
 public class AdManager : MonoBehaviour
 {
-
     public bool TestMode = false;
 
     //In seconds
-    const int AdTimerDuration = 60;
-    float adTimer;
+    const int AdCooldown = 60;
+    const int ErrorCooldown = 20;
 
+
+    float curAdTimer;
+    bool requestingAd = false;
 
     void Awake()
     {
         // Initialize the Google Mobile Ads SDK.
-        MobileAds.Initialize(initStatus => { print("Admob Initialized."); RequestInterstitial(); });
+        MobileAds.Initialize(initStatus => { print("Admob Initialized.");});
 
-
-        adTimer = PlayerPrefs.GetInt("AdTimer", AdTimerDuration);
+        curAdTimer = PlayerPrefs.GetInt("AdTimer", AdCooldown);
     }
-
+    
     private void Update()
     {
-        adTimer -= Time.deltaTime;
+        curAdTimer -= Time.deltaTime;
+        if (curAdTimer <= 0f && !requestingAd) {
+            RequestInterstitial();
+        }
     }
 
     InterstitialAd interstitial;
 
     private void RequestInterstitial()
     {
+        requestingAd = true;
         print("RequestInterstitial");
-
 
 #if UNITY_ANDROID
         string adUnitId = TestMode ? "ca-app-pub-3940256099942544/1033173712" : "ca-app-pub-9363144461440233/6487327625";
@@ -46,61 +48,70 @@ public class AdManager : MonoBehaviour
 #endif
 
         // Initialize an InterstitialAd.
-        this.interstitial = new InterstitialAd(adUnitId);
+        interstitial = new InterstitialAd(adUnitId);
 
         // Called when an ad request failed to load.
-        this.interstitial.OnAdFailedToLoad += HandleOnAdFailedToLoad;
+        interstitial.OnAdFailedToLoad += HandleOnAdFailedToLoad;
         // Called when an ad is shown.
-        this.interstitial.OnAdOpening += HandleOnAdEnded;
+        interstitial.OnAdOpening += HandleOnAdOpening;
         // Called when the ad is closed.
-        this.interstitial.OnAdClosed += HandleOnAdEnded;
+        interstitial.OnAdClosed += HandleOnAdEnded;
 
         // Create an empty ad request.
         AdRequest request = new AdRequest.Builder().Build();
         // Load the interstitial with the request.
-        this.interstitial.LoadAd(request);
+        interstitial.LoadAd(request);
+    }
+
+    void HandleOnAdOpening (object sender, EventArgs args) {
+#if UNITY_EDITOR
+        Time.timeScale = 1f;
+#endif
     }
 
     void HandleOnAdEnded (object sender, EventArgs args)
     {
+        requestingAd = false;
         print("HandleOnAdEnded");
 
-        //Clean up referece to avoid memory leak
+        //Clean up reference to avoid memory leak
         interstitial.Destroy();
-
-        //Reset timer
-        adTimer = AdTimerDuration;
+        interstitial = null;
 
         //Unpause game (AdMob doesn't do this)
         Time.timeScale = 1f;
 
-        RequestInterstitial();
+        //Reset timer
+        curAdTimer = AdCooldown;
     }
 
-    void HandleOnAdFailedToLoad (object sender, AdFailedToLoadEventArgs args)
-    {
+    void HandleOnAdFailedToLoad (object sender, AdFailedToLoadEventArgs args) {
+        requestingAd = false;
         print("Interstitial failed to load: " + args.Message);
 
         //Clean up referece to avoid memory leak
         interstitial.Destroy();
+        interstitial = null;
 
-        //Try again
-        RequestInterstitial();
+        //Try again (after a few seconds)
+        curAdTimer = ErrorCooldown;
     }
-
+    
 
     public void TryShowAd()
     {
-        print("TryShowAd - Ad Timer: " + adTimer);
-        if (this.interstitial.IsLoaded() && adTimer <= 0f)
+        
+        print("TryShowAd - Ad Timer: " + curAdTimer);
+        if (interstitial != null && interstitial.IsLoaded() && curAdTimer <= 0f)
         {
-            this.interstitial.Show();
+            interstitial.Show();
         }
+        
     }
 
     private void OnDestroy()
     {
-        PlayerPrefs.SetInt("AdTimer", (int)adTimer);
+        PlayerPrefs.SetInt("AdTimer", (int)curAdTimer);
     }
     
 }
