@@ -47,4 +47,9 @@ public class UIOptionsPanel : MonoBehaviour
     {
         GameInitializer.Instance.LoadScene(2);
     }
+
+    public void OpenAdSettings()
+    {
+        FindObjectOfType<AdManager>().ShowAdConsentSettings();
+    }
 }
