@@ -21,10 +21,10 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] TrailRenderer trackTrailL;
 
     //Audio
-    //[SerializeField] AudioSource audioSource;
-    //[SerializeField] AudioSource groundedAudioSource;
-    //[SerializeField] AudioClip jumpSound;
-    //[SerializeField] AudioClip landSound;
+    [SerializeField] AudioSource audioSource;
+    [SerializeField] AudioSource groundedAudioSource;
+    [SerializeField] AudioClip jumpSound;
+    [SerializeField] AudioClip landSound;
 
     //Public fields used by scripts
     public float SpeedScale = 1f;
@@ -65,7 +65,7 @@ public class PlayerController : MonoBehaviour {
     {
         isMoving = true;
 
-        AudioManager.Instance.Play("Grounded_Loop");
+        groundedAudioSource.Play();
     }
 
     public void StopMoving()
@@ -76,7 +76,7 @@ public class PlayerController : MonoBehaviour {
 
         //TODO half current velocity (or just reduce it)
 
-        AudioManager.Instance.Stop("Grounded_Loop");
+        groundedAudioSource.Stop();
     }
 
     public float Speed = 6f;
@@ -146,10 +146,11 @@ public class PlayerController : MonoBehaviour {
         trailParticles.Stop();
         SpawnImpactEffect();
 
-            AudioManager.Instance.Play("Jump");
-            //audioSource.PlayOneShot(jumpSound);
-            AudioManager.Instance.Stop("Grounded_Loop");
-            //groundedAudioSource.Stop();
+        if (groundedAudioSource != null)
+        {
+            audioSource.PlayOneShot(jumpSound);
+            groundedAudioSource.Stop();
+        }
     }
 
     //We are grounded again
@@ -163,12 +164,13 @@ public class PlayerController : MonoBehaviour {
         trailParticles.Play();
         SpawnImpactEffect();
 
-            AudioManager.Instance.Play("Land");
-            //audioSource.PlayOneShot(landSound);
+        if (groundedAudioSource != null)
+        {
+            audioSource.PlayOneShot(landSound);
 
             if (GameManager.State == GameState.InGame)
-                AudioManager.Instance.Play("Grounded_Loop");
-            //groundedAudioSource.Play();
+                groundedAudioSource.Play();
+        }
     }
 
     public GameObject impactParticles;

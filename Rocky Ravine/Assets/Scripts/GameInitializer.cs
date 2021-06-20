@@ -26,42 +26,33 @@ public class GameInitializer : MonoBehaviour
         c.a = 0f;
         overlayImage.color = c;
 
-        if (SceneManager.sceneCount == 1)
-        {
-            //Scene 1 = main, 2 = tutorial
-            int index = PlayerPrefs.HasKey("CompletedTutorial") ? 1 : 2;
-
-            LoadScene(index, true);
-        }
-        else
-            //Find the level, that we loaded in from editor.
+        //Do we have any scenes open besides this one (init scene) ?
+        if (SceneManager.sceneCount == 1) {
+            if (!PlayerPrefs.HasKey("CompletedTutorial")) {
+                //Load tutorial
+                if (SceneManager.sceneCount == 1)
+                    loadedScene = SceneManager.LoadScene(2, loadParameters);
+            } else {
+                //Only load mainScene if we haven't already (used in editor)
+                if (SceneManager.sceneCount == 1)
+                    loadedScene = SceneManager.LoadScene(1, loadParameters);
+            }
+        }else {
+            //Just set to the scene we've already loaded
             loadedScene = SceneManager.GetSceneAt(1);
+        }
+
+        
     }
 
-    public void LoadScene(int buildIndex, bool instant = false)
+    public void Restart(bool loadTutorial = false)
     {
-        //Don't load if we are already
-        if (IsLoading)
-            return;
-
-        if (instant)
-        {
-            loadedScene = SceneManager.LoadScene(buildIndex, loadParameters);
-            //Remember loaded scene (used when unloading)
-            loadedScene = SceneManager.GetSceneAt(1);
-
-            return;
-        }
-        //Load with fading animations
-        StartCoroutine(LoadSceneAsync(buildIndex));
+        int index = loadTutorial ? 2 : 1;
+        StartCoroutine(ReloadScene(index));
     }
 
-    public bool IsLoading { get; private set; }
-
-    IEnumerator LoadSceneAsync(int buildIndex)
+    IEnumerator ReloadScene(int buildIndex)
     {
-        IsLoading = true;
-
         //Fade 
         Color c = overlayImage.color;
         float t = 0f;
@@ -88,9 +79,6 @@ public class GameInitializer : MonoBehaviour
 
         //Try and show ad
         adManager.TryShowAd();
-
-        //Reset flag
-        IsLoading = false;
 
         //Fade
         t = 0f;
